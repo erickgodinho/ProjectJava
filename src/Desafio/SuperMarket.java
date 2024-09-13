@@ -31,11 +31,11 @@ public class SuperMarket {
                     break;
 
                 case 3:
-                    removerProdutos();
+                    removerProduto();
                     break;
 
                 case 4:
-                    calcularTotalEstoque;
+                    calcularTotalEstoque();
                     break;
 
                 case 5:
@@ -53,7 +53,117 @@ public class SuperMarket {
 
     }
 
-    public static void adicionarProduto();
+    public static void adicionarProduto(){
+
+        String nome = JOptionPane.showInputDialog("Digite o nome do produto");
+        int quantidade = lerQuantidade();
+        double preco = lerPreco();
+
+        Produto produto = new Produto(nome, quantidade, preco);
+        produtos.add(produto);
+
+        JOptionPane.showMessageDialog(null, "Produto " + nome + " adicionado com sucesso!" );
+    }
+
+    public static int lerQuantidade(){
+        int quantidade = 0;
+        boolean entradaValida = false;
+
+        while (!entradaValida){
+
+            try {
+
+                quantidade = Integer.parseInt(JOptionPane.showInputDialog("Digite a quantidade do produto desejada"));
+
+                if (quantidade < 0 ) throw new Exception("A quantidade não pode ser negativo");
+                entradaValida = true;
+            }
+            catch (Exception e){
+                JOptionPane.showMessageDialog(null,"Entrada inválida" + e.getMessage());
+            }
+        }
+
+        return quantidade;
+    }
+
+    public static double lerPreco(){
+        double preco = 0;
+        boolean entradaValida = false;
+
+        while (!entradaValida) {
+
+            try {
+
+                preco = Double.parseDouble(JOptionPane.showInputDialog("Digite o preço do produto"));
+
+                if (preco < 0) throw new Exception("O preço não pode ser negativo");
+                entradaValida = true;
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, "Entrada inválida" + e.getMessage());
+            }
+        }
+        return preco;
+
+    }
+
+        public static void listarProdutos() {
+            if (produtos.isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Nenhum produto cadastrado.");
+                return;
+            }
+
+            StringBuilder lista = new StringBuilder();
+
+            for (Produto produto : produtos) {
+                lista.append(produto).append("\n");
+            }
+            JOptionPane.showMessageDialog(null, lista.toString());
+        }
+
+        public static void removerProduto(){
+            String nome = JOptionPane.showInputDialog("Digite o produto a ser removido");
+            Produto produtoRemover = null;
+
+                    for ( Produto produto : produtos){
+                        if (produto.getNome().equalsIgnoreCase(nome)){
+                            produtoRemover = produto;
+                            break;
+                        }
+                    }
+
+                    if (produtoRemover != null){
+                        produtos.remove(produtoRemover);
+                        JOptionPane.showMessageDialog(null,"Produto " + nome + " removido com sucesso");
+                    } else{
+                        JOptionPane.showMessageDialog(null, " Produto" + nome + " não encontrado");
+                    }
+
+        }
+
+        public static void calcularTotalEstoque(){
+            double totalEstoque = 0;
+
+                    for(Produto produto : produtos){
+                        totalEstoque += produto.getValorEstoque();
+                    }
+                    JOptionPane.showMessageDialog(null,"Valor total em estoque: R$" + String.format("%.2f", totalEstoque));
+        }
+
+        public static void atualizarProduto(){
+            String nome = JOptionPane.showInputDialog("Digite o nome do produto para ser atualizado");
+
+            for (Produto produto : produtos){
+                if (produto.getNome().equalsIgnoreCase(nome)){
+                    produto.setQuantidade(lerQuantidade());
+                    produto.setPreco(lerPreco());
+                    JOptionPane.showMessageDialog(null,"Produto atualizado");
+                    return;
+                }
+            }
+            JOptionPane.showMessageDialog(null,"Produto não encontrado");
+        }
+
+
 
 }
 
